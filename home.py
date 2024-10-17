@@ -245,4 +245,33 @@ elif app_mode == 'Data Visualization':
     fig, ax = plt.subplots(figsize=(20, 12))
     sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.1, ax=ax)
     ax
+
+
+elif app_mode == 'About Us':
+    # Centered title with custom styling
+    st.markdown("""
+    <div style='text-align: center;'>
+        <h1 style='color: orange;'>About Us</h1>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Load the GIF file
+    file_ = open("aboutus.gif", "rb")
+    contents = file_.read()
+    data_url = base64.b64encode(contents).decode("utf-8")
+    file_.close()
+
+    st.markdown(f"""
+<div style='text-align: center;'>
+    <img src="data:image/gif;base64,{data_url}" alt="aboutus GIF" style="width: 300px; height: auto;">
+</div>
+""", unsafe_allow_html=True)
+
+    # Centered description
+    st.markdown("""
+        <div style='text-align: center;'>
+            At Customer Satisfaction Predictor, we turn data into insights! Our app uses machine learning to predict customer satisfaction based on key factors like service, food, and ambiance. 
+            Whether you're a restaurant owner enhancing guest experiences or a diner curious about satisfaction trends, our tool helps you make data-driven decisions to keep customers happy and coming back.
+        </div>
+    """, unsafe_allow_html=True)
     
