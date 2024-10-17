@@ -274,4 +274,40 @@ elif app_mode == 'About Us':
             Whether you're a restaurant owner enhancing guest experiences or a diner curious about satisfaction trends, our tool helps you make data-driven decisions to keep customers happy and coming back.
         </div>
     """, unsafe_allow_html=True)
+
+
+elif app_mode == 'Contact Us':
+    #st.title('Contact Us')
+    st.markdown("""
+    <div style='text-align: center;'>
+        <h1 style='color: orange;'>Contact Us</h1>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # Create two columns: one for text and one for the image
+    col1, col2 = st.columns([1, 1])  # The first column is larger for the text, and the second one for the image
+    
+    # Contact details in the first column
+    with col1:
+        st.write("""
+            If you have any questions, feedback, or inquiries about our Customer Satisfaction Predictor app, feel free to reach out to us. We value your input and are always looking for ways to improve your experience!
+
+            **Get in touch:**
+            
+            - **Email**: support@foodresturent.com
+            - **Phone**: 011 456-7890
+            - **Location**: No.32, Kaduwela, colombo, Sri lanka
+            
+            Follow us on social media for the latest updates:
+            - **Facebook**: SatisfactionPredictor
+            - **Twitter**: @SatisfactionAI
+            - **Instagram**: @SatisfactionPredictor
+
+            We look forward to hearing from you!
+        """)
+    
+    # Image in the second column
+    with col2:
+        st.image("contact_us_image.png", caption="Reach out to us!")  # Adjust the image path and caption accordingly
+
     
