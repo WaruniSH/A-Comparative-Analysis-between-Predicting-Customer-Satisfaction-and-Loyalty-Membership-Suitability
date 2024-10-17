@@ -174,4 +174,75 @@ elif app_mode == 'Prediction':
             data_url = base64.b64encode(contents).decode("utf-8")
             file_.close()
             st.markdown(f'<img src="data:image/gif;base64,{data_url}" alt="satisfied customer gif">', unsafe_allow_html=True)
+
+elif app_mode == 'Data Visualization':
+    #st.title('Data Visualization Page')
+    st.markdown("""
+    <div style='text-align: center;'>
+        <h1 style='color: orange;'>DATA VISUALIZATION</h1>
+    </div>
+    """, unsafe_allow_html=True)
+    
+
+    # Load data
+    dataset = load_data()
+
+    # Drop unwanted columns
+    dataset = dataset.drop(['CustomerID','Gender', 'GroupSize', 'MealType', 'OnlineReservation', 'DeliveryOrder', 'WaitTime', 'AverageSpend'], axis=1)
+
+    # Differentiate data types
+    non_binary_categorical_columns = ['VisitFrequency', 'PreferredCuisine', 'TimeOfVisit', 'DiningOccasion']
+    numeric_columns = ['Age', 'Income', 'LoyaltyProgramMember', 'ServiceRating', 'FoodRating', 'AmbianceRating']
+
+    # Apply one-hot encoding
+    VisitFrequency_dummie = pd.get_dummies(dataset['VisitFrequency'], prefix='VisitFrequency')
+    PreferredCuisine_dummie = pd.get_dummies(dataset['PreferredCuisine'], prefix='PreferredCuisine')
+    TimeOfVisit_dummie = pd.get_dummies(dataset['TimeOfVisit'], prefix='TimeOfVisit')
+    DiningOccasion_dummie = pd.get_dummies(dataset['DiningOccasion'], prefix='DiningOccasion')
+
+    # Drop non-binary categorical columns and concatenate dummies
+    new_data = dataset.drop(non_binary_categorical_columns, axis=1)
+    OH_data = pd.concat([new_data, VisitFrequency_dummie, PreferredCuisine_dummie, TimeOfVisit_dummie, DiningOccasion_dummie], axis=1)
+
+    # Plot distributions for numerical features
+    st.subheader('Distribution of Numerical Features')
+    for column in numeric_columns:
+        fig, ax = plt.subplots(figsize=(8, 4))
+        sns.histplot(OH_data[column].dropna(), kde=True, ax=ax)
+        ax.set_title(f'Distribution of {column}')
+        st.pyplot(fig)
+
+    # Plot boxplots of features
+    st.subheader('Boxplots of Features')
+    fig, ax = plt.subplots(figsize=(8, 4))
+    ax.boxplot(OH_data['ServiceRating'])
+    ax.set_title('Service Rating Boxplot')
+    ax.set_ylabel('Service Rating')
+    st.pyplot(fig)
+
+    # Plot pie charts for categorical features
+    st.subheader('Pie Chart of High Satisfaction')
+    fig, ax = plt.subplots(figsize=(6, 6))
+    ax.pie(dataset['HighSatisfaction'].value_counts(), labels=dataset['HighSatisfaction'].value_counts().index, autopct='%1.1f%%', startangle=90)
+    ax.set_title('High Satisfaction Distribution')
+    st.pyplot(fig)
+
+    # Correlation with target variable
+    st.subheader('Correlation with Target Variable')
+    corr_matrix = OH_data.corr()
+    corr_with_target = corr_matrix['HighSatisfaction'].sort_values(ascending=False)
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    corr_with_target.drop('HighSatisfaction').plot(kind='bar', color='green', ax=ax)
+    ax.set_title('Correlation with Target Variable (HighSatisfaction)')
+    ax.set_xlabel('Features')
+    ax.set_ylabel('Correlation')
+    ax.set_xticklabels(ax.get_xticklabels(), rotation=45, ha='right')
+    st.pyplot(fig)
+
+    # Heatmap of correlations
+    st.subheader('Heatmap of Feature Correlations')
+    fig, ax = plt.subplots(figsize=(20, 12))
+    sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', linewidths=0.1, ax=ax)
+    ax
     
